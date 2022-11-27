@@ -1,5 +1,6 @@
 using Cinemachine;
 using JetBrains.Annotations;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameSystem : MonoBehaviour
@@ -11,6 +12,7 @@ public class GameSystem : MonoBehaviour
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera;
+    [SerializeField] GameObject _pauseMenu;
     public static GameSystem Instance { get; private set; }
     public int collectedSeeds = 0;
     public int plantedTrees = 0;
@@ -22,7 +24,6 @@ public class GameSystem : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("There is more than one instance!");
             return;
         }
 
@@ -32,6 +33,15 @@ public class GameSystem : MonoBehaviour
     private void Start()
     {
         PlayerRespawn();
+    }
+
+    private void Update()
+    {
+        // pause the game
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
+        }
     }
 
     public void IncrementSeeds()
@@ -71,9 +81,15 @@ public class GameSystem : MonoBehaviour
     {
         if (plantedTrees >= maxTrees)
         {
-            Debug.Log("You WIN!");
             SceneController.Instance.LoadSceneByName("WinScreen");
         }
     }
 
+    public void PauseGame()
+    {
+        player.GetComponent<InputController>().cursorLocked = false;
+        player.GetComponent<InputController>().cursorInputForLook = false;
+        Time.timeScale = 0.0f;
+        _pauseMenu.SetActive(true);
+    }
 }

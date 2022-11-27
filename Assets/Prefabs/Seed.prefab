@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 230964537394605250}
   - component: {fileID: 230964537394605251}
   - component: {fileID: 230964537394605248}
-  - component: {fileID: 230964537394605249}
+  - component: {fileID: 2068252751}
   m_Layer: 0
   m_Name: Seed
   m_TagString: Untagged
@@ -96,9 +96,9 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.5, y: 1.5, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &230964537394605249
+--- !u!114 &2068252751
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,3 +110,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28588ae79c6bdb41ba1f059e3452715, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationSpeed: 50

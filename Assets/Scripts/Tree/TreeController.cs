@@ -16,9 +16,6 @@ public class TreeController : MonoBehaviour
             trunk.SetActive(true);
             GameSystem.Instance.DecrementSeeds();
             GameSystem.Instance.PlantTree();
-        } else
-        {
-            Debug.Log("NO SEEDS!");
         }
         
     }
