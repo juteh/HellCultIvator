@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-
     [SerializeField] TextMeshProUGUI seedsText;
     [SerializeField] TextMeshProUGUI treesText;
     [SerializeField] Image staminaBar;
@@ -32,9 +31,6 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         pauseMenu.SetActive(false);
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<InputController>().cursorLocked = true;
-        player.GetComponent<InputController>().cursorInputForLook = true;
     }
 
     public void RestartLevel()
@@ -49,5 +45,16 @@ public class UIManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
         Application.Quit();
+    }
+
+    public void UpdateStaminaBar(float value)
+    {
+        if (value >= 0.0f && value <= 1.0f)
+        {
+            staminaBar.fillAmount = value;
+        } else
+        {
+            Debug.LogError(string.Format("Wrong value for UpdateStaminaBar() with value: {0}", value)); 
+        }
     }
 }

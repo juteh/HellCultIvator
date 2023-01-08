@@ -128,7 +128,11 @@ public class FirstPersonController : MonoBehaviour
         float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
         if (_input.move == Vector2.zero) targetSpeed = 0.0f;
-
+        if (_input.move != Vector2.zero && _input.sprint)
+        {
+            // TODO: Fill StaminBar slowly when not sprinting reduce by sprinting
+            Singletons.Instance.UIManager.UpdateStaminaBar(0.7f);
+        }
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
