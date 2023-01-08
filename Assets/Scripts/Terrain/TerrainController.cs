@@ -9,4 +9,9 @@ public class TerrainController : MonoBehaviour
         GameSystem.Instance.PlayerDie();
         GameSystem.Instance.PlayerRespawn();
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("TEST");
+    }
 }

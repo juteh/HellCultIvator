@@ -48,5 +48,6 @@ MonoBehaviour:
   spawnPoint: {fileID: 0}
   playerPrefab: {fileID: 655332672975386994, guid: 374339061f4fd394db3536ff15d5944c, type: 3}
   playerFollowCamera: {fileID: 0}
+  _pauseMenu: {fileID: 0}
   collectedSeeds: 0
   plantedTrees: 0

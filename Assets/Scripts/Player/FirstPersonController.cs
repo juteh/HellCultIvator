@@ -9,7 +9,7 @@ public class FirstPersonController : MonoBehaviour
     [Tooltip("Move speed of the character in m/s")]
     [SerializeField] float MoveSpeed = 4.0f;
     [Tooltip("Sprint speed of the character in m/s")]
-    [SerializeField] float SprintSpeed = 6.0f;
+    [SerializeField] float SprintSpeed = 20.0f;
     [Tooltip("Rotation speed of the character")]
     [SerializeField] float RotationSpeed = 1.0f;
     [Tooltip("Acceleration and deceleration")]
@@ -168,6 +168,7 @@ public class FirstPersonController : MonoBehaviour
         // player can several jumps in air
         if (_input.jump && jumpsExecuted < maxJumpsInAir)
         {
+            Singletons.Instance.AudioManager.PlayPlayerJump();
             jumpsExecuted++;
             _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
         }

@@ -9,7 +9,7 @@ public class SeedController : MonoBehaviour
 
     void Update()
     {
-        transform.Rotate(0, rotationSpeed * Time.deltaTime, 0f, Space.Self);
+        transform.Rotate(rotationSpeed * Time.deltaTime, rotationSpeed * Time.deltaTime, 0f, Space.Self);
     }
 
     private void OnTriggerEnter(Collider other)

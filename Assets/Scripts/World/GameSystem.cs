@@ -1,5 +1,6 @@
 using Cinemachine;
 using JetBrains.Annotations;
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,13 +13,11 @@ public class GameSystem : MonoBehaviour
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera;
-    [SerializeField] GameObject _pauseMenu;
     public static GameSystem Instance { get; private set; }
     public int collectedSeeds = 0;
     public int plantedTrees = 0;
     
     private GameObject player;
-
 
     void Awake()
     {
@@ -32,6 +31,9 @@ public class GameSystem : MonoBehaviour
 
     private void Start()
     {
+        Singletons.Instance.AudioManager.PlayMusic();
+        Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
+        Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
         PlayerRespawn();
     }
 
@@ -40,33 +42,50 @@ public class GameSystem : MonoBehaviour
         // pause the game
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            PauseGame();
+            // game is already paused
+            if (Time.timeScale == 0.0f)
+            {
+                player.GetComponent<InputController>().cursorLocked = true;
+                player.GetComponent<InputController>().cursorInputForLook = true;
+                Singletons.Instance.UIManager.ResumeToGame();
+            } else
+            {
+                player.GetComponent<InputController>().cursorLocked = false;
+                player.GetComponent<InputController>().cursorInputForLook = false;
+                Singletons.Instance.UIManager.PauseGame();
+            }
         }
     }
 
     public void IncrementSeeds()
     {
+        Singletons.Instance.AudioManager.PlayCollectSeed();
         collectedSeeds++;
+        Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
     }
 
-    public void DecrementSeeds()
+    public bool DecrementSeeds()
     {
-        if (collectedSeeds > 0)
+        if (collectedSeeds >= 3)
         {
-            collectedSeeds--;
-        } else
-        {
-            Debug.Log("No CollectSeeds are 0. Can't decrement");
+            collectedSeeds -= 3;
+            Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
+            return true;
         }
+
+        return false;
     }
     public void PlantTree()
     {
+        Singletons.Instance.AudioManager.PlayPlantTree();
         plantedTrees++;
+        Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
         CheckWinCondition();
     }
 
     public void PlayerDie()
     {
+        Singletons.Instance.AudioManager.PlayPlayerDie();
         playerFollowCamera.Follow = null;
         Destroy(player);
     }
@@ -83,13 +102,5 @@ public class GameSystem : MonoBehaviour
         {
             SceneController.Instance.LoadSceneByName("WinScreen");
         }
-    }
-
-    public void PauseGame()
-    {
-        player.GetComponent<InputController>().cursorLocked = false;
-        player.GetComponent<InputController>().cursorInputForLook = false;
-        Time.timeScale = 0.0f;
-        _pauseMenu.SetActive(true);
     }
 }
