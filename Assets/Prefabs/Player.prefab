@@ -143,6 +143,7 @@ GameObject:
   - component: {fileID: 655332672975386988}
   - component: {fileID: 655332672975386984}
   - component: {fileID: 655332672975386985}
+  - component: {fileID: -8349502475177667765}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -215,12 +216,6 @@ MonoBehaviour:
   CinemachineCameraTarget: {fileID: 655332672897587529}
   TopClamp: 80
   BottomClamp: -80
-  audioClips:
-  - {fileID: 8300000, guid: bf52aee7ca0b5c74f8fd15b24e38e694, type: 3}
-  - {fileID: 8300000, guid: 7962d91cfbca4704c9a825c99582b3cc, type: 3}
-  - {fileID: 8300000, guid: 9d74fb11ea7dc2d499440388669035db, type: 3}
-  - {fileID: 8300000, guid: 3b93a6abfec5ad94e8f55fcf3d8baf63, type: 3}
-  - {fileID: 8300000, guid: bb00670b79e10ae40bca0fd4ec1f158e, type: 3}
 --- !u!114 &655332672975386988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,3 +282,19 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &-8349502475177667765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655332672975386994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dba3aebb3037c94ba091ec120182ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStamina: 100
+  reduceTime: 0.02
+  recoverTime: 0.02
+  currentStamina: 0

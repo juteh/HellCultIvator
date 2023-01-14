@@ -63,6 +63,7 @@ public class FirstPersonController : MonoBehaviour
     private CharacterController _controller;
     private InputController _input;
     private GameObject _mainCamera;
+    private PlayerAttributes _playerAttributes;
 
     private const float _threshold = 0.01f;
 
@@ -75,6 +76,7 @@ public class FirstPersonController : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
+        _playerAttributes = GetComponent<PlayerAttributes>();
     }
 
     private void Start()
@@ -131,7 +133,10 @@ public class FirstPersonController : MonoBehaviour
         if (_input.move != Vector2.zero && _input.sprint)
         {
             // TODO: Fill StaminBar slowly when not sprinting reduce by sprinting
-            Singletons.Instance.UIManager.UpdateStaminaBar(0.7f);
+            _playerAttributes.StartReduceStamina();
+        } else
+        {
+            _playerAttributes.StartRecoverStamina();
         }
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
