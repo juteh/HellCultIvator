@@ -127,12 +127,11 @@ public class FirstPersonController : MonoBehaviour
 
     private void Move()
     {
-        float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+        float targetSpeed = _input.sprint && _playerAttributes.currentStamina > 0 ? SprintSpeed : MoveSpeed;
 
         if (_input.move == Vector2.zero) targetSpeed = 0.0f;
         if (_input.move != Vector2.zero && _input.sprint)
         {
-            // TODO: Fill StaminBar slowly when not sprinting reduce by sprinting
             _playerAttributes.StartReduceStamina();
         } else
         {

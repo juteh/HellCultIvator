@@ -1,32 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAttributes : MonoBehaviour
 {
     [SerializeField] private int maxStamina = 100;
-    [SerializeField] private float reduceTime = 0.1f;
-    [SerializeField] private float recoverTime = 0.1f;
+    [SerializeField] private float reduceIntervalTime = 0.1f;
+    [SerializeField] private float recoverIntervalTime = 0.1f;
+    [SerializeField] private float exhaustionTime = 3.0f;
     public float currentStamina;
 
     private IEnumerator reduceStaminaRoutine;
     private IEnumerator recoverStaminaRoutine;
+    private IEnumerator playerExhaustedRoutine;
 
     private void Awake()
     {
         currentStamina = maxStamina;
     }
 
+    private void Update()
+    {
+        // player is exhausted
+        if (currentStamina <= 0 && playerExhaustedRoutine == null)
+        {
+            if (reduceStaminaRoutine != null)
+            {
+                StopCoroutine(reduceStaminaRoutine);
+                reduceStaminaRoutine = null;
+            }
+            if (recoverStaminaRoutine != null)
+            {
+                StopCoroutine(recoverStaminaRoutine);
+                reduceStaminaRoutine = null;
+            } if (playerExhaustedRoutine == null)
+            {
+                playerExhaustedRoutine = PlayerExhausted();
+                StartCoroutine(playerExhaustedRoutine);
+            }
+        }
+    }
+
     public void StartReduceStamina()
     {
+        if (playerExhaustedRoutine != null) return;
+
         if (recoverStaminaRoutine != null) {
-            Debug.Log("STOP RecoverStamina");
             StopCoroutine(recoverStaminaRoutine);
             recoverStaminaRoutine = null;
         }
         if (reduceStaminaRoutine == null && currentStamina >= 0)
         {
-            Debug.Log("START ReduceStamina");
             reduceStaminaRoutine = ReduceStamina();
             StartCoroutine(reduceStaminaRoutine);
         }
@@ -34,15 +59,15 @@ public class PlayerAttributes : MonoBehaviour
 
     public void StartRecoverStamina()
     {
+        if (playerExhaustedRoutine != null) return;
+
         if (reduceStaminaRoutine != null)
         {
-            Debug.Log("STOP ReduceStamina");
             StopCoroutine(reduceStaminaRoutine);
             reduceStaminaRoutine = null;
         }
         if (recoverStaminaRoutine == null && currentStamina <= maxStamina)
         {
-            Debug.Log("START RecoverStamina");
             recoverStaminaRoutine = RecoverStamina();
             StartCoroutine(recoverStaminaRoutine);
         }
@@ -55,13 +80,9 @@ public class PlayerAttributes : MonoBehaviour
         {
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
             float staminaRation = currentStamina / maxStamina;
-            //Debug.Log(staminaRation);
             Singletons.Instance.UIManager.UpdateStaminaBar(staminaRation);
-            yield return new WaitForSeconds(reduceTime);
+            yield return new WaitForSeconds(reduceIntervalTime);
         }
-        Debug.Log("FINISH ReduceStamina");
-        yield return null;
-        StartCoroutine(reduceStaminaRoutine);
         reduceStaminaRoutine = null;
     }
 
@@ -72,13 +93,16 @@ public class PlayerAttributes : MonoBehaviour
             currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
             float staminaRation = currentStamina / maxStamina;
 
-            //Debug.Log(staminaRation);
             Singletons.Instance.UIManager.UpdateStaminaBar(staminaRation);
-            yield return new WaitForSeconds(recoverTime);
+            yield return new WaitForSeconds(recoverIntervalTime);
         }
-        Debug.Log("FINISH RecoverStamina");
-        yield return null;
-        StartCoroutine(recoverStaminaRoutine);
         recoverStaminaRoutine = null;
+    }
+
+    IEnumerator PlayerExhausted()
+    {
+        yield return new WaitForSeconds(exhaustionTime);
+        playerExhaustedRoutine = null;
+        currentStamina = maxStamina / 4;
     }
 }

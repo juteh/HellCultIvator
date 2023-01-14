@@ -295,6 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxStamina: 100
-  reduceTime: 0.02
-  recoverTime: 0.02
+  reduceIntervalTime: 0.02
+  recoverIntervalTime: 0.02
+  exhaustionTime: 3
   currentStamina: 0
