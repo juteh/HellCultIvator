@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - Deathzone
+  - MovingPlattform
   layers:
   - Default
   - TransparentFX

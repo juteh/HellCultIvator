@@ -15,6 +15,15 @@ public class PlayerAttributes : MonoBehaviour
     private IEnumerator recoverStaminaRoutine;
     private IEnumerator playerExhaustedRoutine;
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Deathzone")
+        {
+            GameSystem.Instance.PlayerDie();
+            GameSystem.Instance.PlayerRespawn();
+        }
+    }
+
     private void Awake()
     {
         currentStamina = maxStamina;
