@@ -6698,29 +6698,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-<<<<<<< HEAD
-=======
-    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_UpdateMethod
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115801, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_RendererIndex
-      value: -1
-      objectReference: {fileID: 0}
->>>>>>> ece048a (Testing dynamicGround)
     - target: {fileID: 7579711614930115803, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
       propertyPath: m_RootOrder
       value: 6
