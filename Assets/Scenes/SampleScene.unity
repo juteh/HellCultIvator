@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.21111931, g: 0.058149625, b: 0.036026925, a: 1}
+  m_IndirectSpecularColor: {r: 0.21111944, g: 0.058149792, b: 0.036026347, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6674,22 +6674,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115801, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_RendererIndex
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 7579711614930115803, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -6734,32 +6718,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115804, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_HDR
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115804, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_AllowMSAA
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115804, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: m_ClearFlags
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115804, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: field of view
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 7579711614930115804, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
-      propertyPath: near clip plane
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 7579711614930115806, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
       propertyPath: m_Name
       value: MainCamera
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7579711614930115802, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
 --- !u!1001 &7669265147988280158
 PrefabInstance:
