@@ -2678,14 +2678,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1849829012, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
-      propertyPath: pauseDuration
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1849829012, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
-      propertyPath: movingDuration
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 619108774632001864, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -2733,6 +2725,18 @@ PrefabInstance:
     - target: {fileID: 619108774632001876, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
       propertyPath: m_Name
       value: DynamicGround
+      objectReference: {fileID: 0}
+    - target: {fileID: 619108774632001879, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3435835433891746282, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3435835433891746282, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd9c6a5f6de9f824ea8edf2e36acd7e9, type: 3}
@@ -6483,8 +6487,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2590949598424076238, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
+      propertyPath: Damping.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2590949598424076238, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
+      propertyPath: Damping.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2590949598424076238, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
+      propertyPath: Damping.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2590949598424076238, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
       propertyPath: CameraSide
       value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2590949598424076238, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
+      propertyPath: CameraRadius
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2590949599517875740, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
       propertyPath: m_Name
@@ -6493,6 +6513,10 @@ PrefabInstance:
     - target: {fileID: 2590949599517875741, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
       propertyPath: m_Follow
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2590949599517875741, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
+      propertyPath: m_StandbyUpdate
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2590949599517875741, guid: b4766d732347a2c4c8eaf021190240b1, type: 3}
       propertyPath: m_Lens.FieldOfView
@@ -6674,6 +6698,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+<<<<<<< HEAD
+=======
+    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
+      propertyPath: m_UpdateMethod
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
+      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
+      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7579711614930115800, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
+      propertyPath: m_CameraActivatedEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7579711614930115801, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
+      propertyPath: m_RendererIndex
+      value: -1
+      objectReference: {fileID: 0}
+>>>>>>> ece048a (Testing dynamicGround)
     - target: {fileID: 7579711614930115803, guid: 40c1cb75b939aae4ebc2fb3bfbfd2a5e, type: 3}
       propertyPath: m_RootOrder
       value: 6
