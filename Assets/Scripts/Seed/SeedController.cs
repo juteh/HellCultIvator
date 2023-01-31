@@ -14,7 +14,13 @@ public class SeedController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameSystem.Instance.IncrementSeeds();
-        Destroy(gameObject);
+        Debug.Log(other.gameObject.name);
+        // Hack: sometimes Seeds collide witch "Capsule"
+        // check explizit for player
+        if (other.gameObject.tag == "Player")
+        {
+            GameSystem.Instance.IncrementSeeds();
+            Destroy(gameObject);
+        }
     }
 }

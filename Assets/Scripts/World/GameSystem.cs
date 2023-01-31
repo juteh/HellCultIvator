@@ -34,6 +34,7 @@ public class GameSystem : MonoBehaviour
         Singletons.Instance.AudioManager.PlayMusic();
         Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
         Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
+        Cursor.visible = false;
         PlayerRespawn();
     }
 
@@ -47,11 +48,15 @@ public class GameSystem : MonoBehaviour
             {
                 player.GetComponent<InputController>().cursorLocked = true;
                 player.GetComponent<InputController>().cursorInputForLook = true;
+                player.GetComponent<FirstPersonController>().RecoverRotation();
+                Cursor.visible = false;
                 Singletons.Instance.UIManager.ResumeToGame();
             } else
             {
                 player.GetComponent<InputController>().cursorLocked = false;
                 player.GetComponent<InputController>().cursorInputForLook = false;
+                player.GetComponent<FirstPersonController>().FreezeRotation();
+                Cursor.visible = true;
                 Singletons.Instance.UIManager.PauseGame();
             }
         }
@@ -100,6 +105,7 @@ public class GameSystem : MonoBehaviour
     {
         if (plantedTrees >= maxTrees)
         {
+            Cursor.visible = true;
             SceneController.Instance.LoadSceneByName("WinScreen");
         }
     }

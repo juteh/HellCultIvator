@@ -11,7 +11,7 @@ public class FirstPersonController : MonoBehaviour
     [Tooltip("Sprint speed of the character in m/s")]
     [SerializeField] float SprintSpeed = 20.0f;
     [Tooltip("Rotation speed of the character")]
-    [SerializeField] float RotationSpeed = 1.0f;
+    [SerializeField] float rotationSpeed = 1.0f;
     [Tooltip("Acceleration and deceleration")]
     [SerializeField] float SpeedChangeRate = 10.0f;
     [SerializeField] int maxJumpsInAir = 2;
@@ -48,6 +48,8 @@ public class FirstPersonController : MonoBehaviour
 
     // cinemachine
     private float _cinemachineTargetPitch;
+    // set rotationSpeed in GameSystem for pausing the game
+    private float currentRotationSpeed;
 
     // player
     private float _speed;
@@ -77,6 +79,7 @@ public class FirstPersonController : MonoBehaviour
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
         _playerAttributes = GetComponent<PlayerAttributes>();
+        currentRotationSpeed = rotationSpeed;
     }
 
     private void Start()
@@ -114,8 +117,8 @@ public class FirstPersonController : MonoBehaviour
         if (_input.look.sqrMagnitude >= _threshold)
         {
 
-            _cinemachineTargetPitch += _input.look.y * RotationSpeed;
-            _rotationVelocity = _input.look.x * RotationSpeed;
+            _cinemachineTargetPitch += _input.look.y * currentRotationSpeed;
+            _rotationVelocity = _input.look.x * currentRotationSpeed;
 
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
             // Update Cinemachine camera target pitch
@@ -245,5 +248,16 @@ public class FirstPersonController : MonoBehaviour
 
         // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
         Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+    }
+
+    // rotation manipulation for pausing the game
+    public void FreezeRotation()
+    {
+        currentRotationSpeed= 0.0f;
+    }
+
+    public void RecoverRotation()
+    {
+        currentRotationSpeed = rotationSpeed;
     }
 }
