@@ -7,6 +7,8 @@ TagManager:
   - CinemachineTarget
   - Deathzone
   - MovingPlattform
+  - Plattform
+  - Seed
   layers:
   - Default
   - TransparentFX

@@ -14,8 +14,7 @@ public class SeedController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-        // Hack: sometimes Seeds collide witch "Capsule"
+        // Hack: sometimes Seeds collide with "Capsule"
         // check explizit for player
         if (other.gameObject.tag == "Player")
         {
