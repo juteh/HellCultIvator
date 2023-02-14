@@ -19,48 +19,40 @@ public class MotionManager : MonoBehaviour
     [Header("PauseMoving between moving back and repeat in seconds")]
     [SerializeField] float pauseDuration;
 
-    private float _startTime;
-    private GameObject _objectOnPlattform;
+    private float? _startTime;
+    private Vector3 _startPosition;
+    private Vector3 _endPosition;
 
     private void Start()
     {
-        Vector3 startPosition = gameObject.transform.position;
-        Vector3 endPosition = startPosition + destiantion.transform.localPosition;
-        
-        StartCoroutine(MoveObject(
-            startPosition: startPosition,
-            endPosition: endPosition,
-            movingObject: gameObject
+        _startPosition = gameObject.transform.position;
+        _endPosition = _startPosition + destiantion.transform.localPosition;
+        StartCoroutine(
+            MoveObject(
+                startPosition: _startPosition,
+                endPosition: _endPosition,
+                movingObject: gameObject
             )
         );
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerEnter");
-        Debug.Log(other.tag);
         if (other.tag == "Seed")
         {
-            _objectOnPlattform = other.gameObject;
-            Vector3 startPosition = _objectOnPlattform.gameObject.transform.position;
-            Vector3 endPosition = startPosition + destiantion.transform.localPosition;
-            // TODO: bug, wird imer gleiche coroutine aufgerufen. Müssen unabhängige sein
-            StartCoroutine(MoveObject(
-                startPosition: startPosition,
-                endPosition: endPosition,
-                movingObject: _objectOnPlattform
-                )
+            Vector3 startPosition = new Vector3(
+                other.gameObject.transform.position.x,
+                _startPosition.y + Mathf.Abs(gameObject.transform.position.y - other.gameObject.transform.position.y),
+                other.gameObject.transform.position.z
             );
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        Debug.Log("OnTriggerExit");
-        Debug.Log(other.tag);
-        if (other.tag == "Seed")
-        {
-            _objectOnPlattform = null;
+            Vector3 endPosition = startPosition + destiantion.transform.localPosition;
+            StartCoroutine(
+                MoveObject(
+                    startPosition: startPosition,
+                    endPosition: endPosition,
+                    movingObject: other.gameObject
+                )
+           );
         }
     }
 
@@ -70,15 +62,19 @@ public class MotionManager : MonoBehaviour
         {
             movingObject.transform.position = endPosition;
         }
-        _startTime = Time.time;
         while (Vector3.Distance(movingObject.transform.position, endPosition) > Mathf.Epsilon)
         {
-            float timePassed = Time.time - _startTime;
+            if (_startTime == null)
+            {
+                _startTime = Time.time;
+            }
+            float timePassed = Time.time - (float)_startTime;
             float progress = timePassed / movingDuration;
 
             movingObject.transform.position = Vector3.Lerp(startPosition, endPosition, progress);
             yield return new WaitForFixedUpdate();
         }
+        _startTime = null;
         if (repeatMoving)
         {
             StartCoroutine(PauseMoving(
