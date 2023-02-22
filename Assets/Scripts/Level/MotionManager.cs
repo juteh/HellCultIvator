@@ -1,13 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class MotionManager : MonoBehaviour
-{
+public class MotionManager : MonoBehaviour {
     [SerializeField] GameObject destiantion;
     [Space(5)]
     [Header("Moving plattform to destination in seconds")]
@@ -23,8 +17,7 @@ public class MotionManager : MonoBehaviour
     private Vector3 _startPosition;
     private Vector3 _endPosition;
 
-    private void Start()
-    {
+    private void Start() {
         _startPosition = gameObject.transform.position;
         _endPosition = _startPosition + destiantion.transform.localPosition;
         StartCoroutine(
@@ -36,47 +29,41 @@ public class MotionManager : MonoBehaviour
         );
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Seed")
-        {
+    private void OnTriggerEnter(Collider other) {
+        if (other.tag == "Seed") {
             Vector3 startPosition = new Vector3(
                 other.gameObject.transform.position.x,
                 _startPosition.y + Mathf.Abs(gameObject.transform.position.y - other.gameObject.transform.position.y),
                 other.gameObject.transform.position.z
             );
             Vector3 endPosition = startPosition + destiantion.transform.localPosition;
-            StartCoroutine(
-                MoveObject(
-                    startPosition: startPosition,
-                    endPosition: endPosition,
-                    movingObject: other.gameObject
-                )
-           );
+            other.gameObject.GetComponent<SeedController>().StartMovingSeed(
+                startPosition: startPosition,
+                endPosition: endPosition,
+                movingObject: other.gameObject,
+                movingDuration: movingDuration,
+                _startTime: _startTime,
+                repeatMoving: repeatMoving,
+                pauseDuration: pauseDuration
+            );
         }
     }
 
-    IEnumerator MoveObject(Vector3 startPosition, Vector3 endPosition, GameObject movingObject)
-    {
-        if (movingDuration == 0)
-        {
+    IEnumerator MoveObject(Vector3 startPosition, Vector3 endPosition, GameObject movingObject) {
+        if (movingDuration == 0) {
             movingObject.transform.position = endPosition;
         }
-        while (Vector3.Distance(movingObject.transform.position, endPosition) > Mathf.Epsilon)
-        {
-            if (_startTime == null)
-            {
+        while (Vector3.Distance(movingObject.transform.position, endPosition) > Mathf.Epsilon) {
+            if (_startTime == null) {
                 _startTime = Time.time;
             }
             float timePassed = Time.time - (float)_startTime;
             float progress = timePassed / movingDuration;
-
             movingObject.transform.position = Vector3.Lerp(startPosition, endPosition, progress);
             yield return new WaitForFixedUpdate();
         }
         _startTime = null;
-        if (repeatMoving)
-        {
+        if (repeatMoving) {
             StartCoroutine(PauseMoving(
                 startPosition: startPosition,
                 endPosition: endPosition,
@@ -86,11 +73,9 @@ public class MotionManager : MonoBehaviour
         }
     }
 
-    IEnumerator PauseMoving(Vector3 startPosition, Vector3 endPosition, GameObject movingObject)
-    {
+    IEnumerator PauseMoving(Vector3 startPosition, Vector3 endPosition, GameObject movingObject) {
         yield return new WaitForSeconds(pauseDuration);
-        if (Vector3.Distance(movingObject.transform.position, endPosition) <= Mathf.Epsilon)
-        {
+        if (Vector3.Distance(movingObject.transform.position, endPosition) <= Mathf.Epsilon) {
             // switch start- and endpostion
             StartCoroutine(MoveObject(
                 startPosition: endPosition,
@@ -98,14 +83,12 @@ public class MotionManager : MonoBehaviour
                 movingObject: movingObject
                 )
             );
-        } else
-        {
+        } else {
             StartCoroutine(MoveObject(startPosition, endPosition, movingObject));
         }
     }
 
-    void OnDrawGizmosSelected()
-    {
+    void OnDrawGizmosSelected() {
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(gameObject.transform.position, destiantion.transform.position);
     }

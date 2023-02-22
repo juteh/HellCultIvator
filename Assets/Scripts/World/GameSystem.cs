@@ -1,11 +1,7 @@
 using Cinemachine;
-using JetBrains.Annotations;
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameSystem : MonoBehaviour
-{
+public class GameSystem : MonoBehaviour {
     [Header("WinCondition")]
     [Tooltip("Maximum of needed Trees to win the Game")]
     [SerializeField] int maxTrees;
@@ -13,24 +9,23 @@ public class GameSystem : MonoBehaviour
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera;
-    public static GameSystem Instance { get; private set; }
+    public static GameSystem Instance {
+        get; private set;
+    }
     public int collectedSeeds = 0;
     public int plantedTrees = 0;
-    
+
     private GameObject player;
 
-    void Awake()
-    {
-        if (Instance != null)
-        {
+    void Awake() {
+        if (Instance != null) {
             return;
         }
 
         Instance = this;
     }
 
-    private void Start()
-    {
+    private void Start() {
         Singletons.Instance.AudioManager.PlayMusic();
         Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
         Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
@@ -38,21 +33,17 @@ public class GameSystem : MonoBehaviour
         PlayerRespawn();
     }
 
-    private void Update()
-    {
+    private void Update() {
         // pause the game
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
             // game is already paused
-            if (Time.timeScale == 0.0f)
-            {
+            if (Time.timeScale == 0.0f) {
                 player.GetComponent<InputController>().cursorLocked = true;
                 player.GetComponent<InputController>().cursorInputForLook = true;
                 player.GetComponent<FirstPersonController>().RecoverRotation();
                 Cursor.visible = false;
                 Singletons.Instance.UIManager.ResumeToGame();
-            } else
-            {
+            } else {
                 player.GetComponent<InputController>().cursorLocked = false;
                 player.GetComponent<InputController>().cursorInputForLook = false;
                 player.GetComponent<FirstPersonController>().FreezeRotation();
@@ -62,17 +53,14 @@ public class GameSystem : MonoBehaviour
         }
     }
 
-    public void IncrementSeeds()
-    {
+    public void IncrementSeeds() {
         Singletons.Instance.AudioManager.PlayCollectSeed();
         collectedSeeds++;
         Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
     }
 
-    public bool DecrementSeeds()
-    {
-        if (collectedSeeds >= 3)
-        {
+    public bool DecrementSeeds() {
+        if (collectedSeeds >= 3) {
             collectedSeeds -= 3;
             Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
             return true;
@@ -80,31 +68,26 @@ public class GameSystem : MonoBehaviour
 
         return false;
     }
-    public void PlantTree()
-    {
+    public void PlantTree() {
         Singletons.Instance.AudioManager.PlayPlantTree();
         plantedTrees++;
         Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
         CheckWinCondition();
     }
 
-    public void PlayerDie()
-    {
+    public void PlayerDie() {
         Singletons.Instance.AudioManager.PlayPlayerDie();
         playerFollowCamera.Follow = null;
         Destroy(player);
     }
 
-    public void PlayerRespawn()
-    {
+    public void PlayerRespawn() {
         player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
         playerFollowCamera.Follow = player.transform.transform.Find("CameraRoot");
     }
 
-    private void CheckWinCondition()
-    {
-        if (plantedTrees >= maxTrees)
-        {
+    private void CheckWinCondition() {
+        if (plantedTrees >= maxTrees) {
             Cursor.visible = true;
             SceneController.Instance.LoadSceneByName("WinScreen");
         }

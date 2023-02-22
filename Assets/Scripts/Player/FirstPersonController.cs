@@ -3,8 +3,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerInput))]
-public class FirstPersonController : MonoBehaviour
-{
+public class FirstPersonController : MonoBehaviour {
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
     [SerializeField] float MoveSpeed = 4.0f;
@@ -71,19 +70,16 @@ public class FirstPersonController : MonoBehaviour
 
     private int jumpsExecuted = 0;
 
-    private void Awake()
-    {
+    private void Awake() {
         // get a reference to our main camera
-        if (_mainCamera == null)
-        {
+        if (_mainCamera == null) {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
         _playerAttributes = GetComponent<PlayerAttributes>();
         currentRotationSpeed = rotationSpeed;
     }
 
-    private void Start()
-    {
+    private void Start() {
         _controller = GetComponent<CharacterController>();
         _input = GetComponent<InputController>();
         _playerInput = GetComponent<PlayerInput>();
@@ -93,29 +89,24 @@ public class FirstPersonController : MonoBehaviour
         _fallTimeoutDelta = FallTimeout;
     }
 
-    private void Update()
-    {
+    private void Update() {
         JumpAndGravity();
         GroundedCheck();
         Move();
     }
 
-    private void LateUpdate()
-    {
+    private void LateUpdate() {
         CameraRotation();
     }
 
-    private void GroundedCheck()
-    {
+    private void GroundedCheck() {
         // set sphere position, with offset
         Vector3 speherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
         Grounded = Physics.CheckSphere(speherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
     }
 
-    private void CameraRotation()
-    {
-        if (_input.look.sqrMagnitude >= _threshold)
-        {
+    private void CameraRotation() {
+        if (_input.look.sqrMagnitude >= _threshold) {
 
             _cinemachineTargetPitch += _input.look.y * currentRotationSpeed;
             _rotationVelocity = _input.look.x * currentRotationSpeed;
@@ -128,16 +119,14 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void Move()
-    {
+    private void Move() {
         float targetSpeed = _input.sprint && _playerAttributes.currentStamina > 0 ? SprintSpeed : MoveSpeed;
 
-        if (_input.move == Vector2.zero) targetSpeed = 0.0f;
-        if (_input.move != Vector2.zero && _input.sprint)
-        {
+        if (_input.move == Vector2.zero)
+            targetSpeed = 0.0f;
+        if (_input.move != Vector2.zero && _input.sprint) {
             _playerAttributes.StartReduceStamina();
-        } else
-        {
+        } else {
             _playerAttributes.StartRecoverStamina();
         }
         // a reference to the players current horizontal velocity
@@ -147,25 +136,21 @@ public class FirstPersonController : MonoBehaviour
         float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
         // accelerate or decelerate to target speed
-        if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
-        {
+        if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset) {
             // creates curved result rather than a linear one giving a more organic speed change
             // note T in Lerp is clamped, so we don't need to clamp our speed
             _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
 
             // round speed to 3 decimal places
             _speed = Mathf.Round(_speed * 1000f) / 1000f;
-        }
-        else
-        {
+        } else {
             _speed = targetSpeed;
         }
 
         // normalise input direction
         Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
-        if (_input.move != Vector2.zero)
-        {
+        if (_input.move != Vector2.zero) {
             // move
             inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
         }
@@ -174,49 +159,40 @@ public class FirstPersonController : MonoBehaviour
         _controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
     }
 
-    private void JumpAndGravity()
-    {
+    private void JumpAndGravity() {
         // player can several jumps in air
-        if (_input.jump && jumpsExecuted < maxJumpsInAir)
-        {
+        if (_input.jump && jumpsExecuted < maxJumpsInAir) {
             Singletons.Instance.AudioManager.PlayPlayerJump();
             jumpsExecuted++;
             _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
         }
 
-        if (Grounded)
-        {
+        if (Grounded) {
             jumpsExecuted = 0;
             // reset the fall timeout timer
             _fallTimeoutDelta = FallTimeout;
 
             // stop our velocity dropping infinitely when grounded
-            if (_verticalVelocity < 0.0f)
-            {
+            if (_verticalVelocity < 0.0f) {
                 _verticalVelocity = -2f;
             }
 
             // Jump
-            if (_input.jump && _jumpTimeoutDelta <= 0.0f)
-            {
+            if (_input.jump && _jumpTimeoutDelta <= 0.0f) {
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 //_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
             }
 
             // jump timeout
-            if (_jumpTimeoutDelta >= 0.0f)
-            {
+            if (_jumpTimeoutDelta >= 0.0f) {
                 _jumpTimeoutDelta -= Time.deltaTime;
             }
-        }
-        else
-        {
+        } else {
             // reset the jump timeout timer
             _jumpTimeoutDelta = JumpTimeout;
 
             // fall timeout
-            if (_fallTimeoutDelta >= 0.0f)
-            {
+            if (_fallTimeoutDelta >= 0.0f) {
                 _fallTimeoutDelta -= Time.deltaTime;
             }
 
@@ -225,39 +201,38 @@ public class FirstPersonController : MonoBehaviour
         }
 
         // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-        if (_verticalVelocity < _terminalVelocity)
-        {
+        if (_verticalVelocity < _terminalVelocity) {
             _verticalVelocity += Gravity * Time.deltaTime;
         }
     }
 
-    private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
-    {
-        if (lfAngle < -360f) lfAngle += 360f;
-        if (lfAngle > 360f) lfAngle -= 360f;
+    private static float ClampAngle(float lfAngle, float lfMin, float lfMax) {
+        if (lfAngle < -360f)
+            lfAngle += 360f;
+        if (lfAngle > 360f)
+            lfAngle -= 360f;
         return Mathf.Clamp(lfAngle, lfMin, lfMax);
     }
 
-    private void OnDrawGizmosSelected()
-    {
+    private void OnDrawGizmosSelected() {
         Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
         Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
 
-        if (Grounded) Gizmos.color = transparentGreen;
-        else Gizmos.color = transparentRed;
+        if (Grounded)
+            Gizmos.color = transparentGreen;
+        else
+            Gizmos.color = transparentRed;
 
         // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
         Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
     }
 
     // rotation manipulation for pausing the game
-    public void FreezeRotation()
-    {
-        currentRotationSpeed= 0.0f;
+    public void FreezeRotation() {
+        currentRotationSpeed = 0.0f;
     }
 
-    public void RecoverRotation()
-    {
+    public void RecoverRotation() {
         currentRotationSpeed = rotationSpeed;
     }
 }

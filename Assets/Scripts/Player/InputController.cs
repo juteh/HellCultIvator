@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputController : MonoBehaviour
-{
+public class InputController : MonoBehaviour {
     [Header("Character Input Values")]
     public Vector2 move;
     public Vector2 look;
@@ -16,55 +15,45 @@ public class InputController : MonoBehaviour
     public bool cursorLocked = true;
     public bool cursorInputForLook = true;
 
-    public void OnMove(InputValue value)
-    {
+    public void OnMove(InputValue value) {
         MoveInput(value.Get<Vector2>());
     }
 
-    public void OnLook(InputValue value)
-    {
-        if (cursorInputForLook)
-        {
+    public void OnLook(InputValue value) {
+        if (cursorInputForLook) {
             LookInput(value.Get<Vector2>());
         }
     }
 
-    public void OnJump(InputValue value)
-    {
+    public void OnJump(InputValue value) {
         JumpInput(value.isPressed);
     }
 
-    public void OnSprint(InputValue value)
-    {
+    public void OnSprint(InputValue value) {
         SprintInput(value.isPressed);
     }
 
-    public void MoveInput(Vector2 newMoveDirection)
-    {
+    public void MoveInput(Vector2 newMoveDirection) {
         move = newMoveDirection;
     }
 
-    public void LookInput(Vector2 newLookDirection)
-    {
+    public void LookInput(Vector2 newLookDirection) {
         look = newLookDirection;
     }
 
-    public void JumpInput(bool newJumpState)
-    {
+    public void JumpInput(bool newJumpState) {
         jump = newJumpState;
     }
 
-    public void SprintInput(bool newSprintState) { 
+    public void SprintInput(bool newSprintState) {
         sprint = newSprintState;
     }
 
-    private void OnApplicationFocus(bool focus)
-    {
+    private void OnApplicationFocus(bool focus) {
         SetCursorState(cursorLocked);
     }
 
-    private void SetCursorState(bool newState)
-    {
+    private void SetCursorState(bool newState) {
         Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
     }
 }
