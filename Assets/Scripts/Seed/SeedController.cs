@@ -9,9 +9,8 @@ public class SeedController : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        // Hack: sometimes Seeds collide with "Capsule"
-        // check explizit for player
         if (other.gameObject.tag == "Player") {
+            // Debug.Log(other.gameObject.tag);
             GameSystem.Instance.IncrementSeeds();
             StopAllCoroutines();
             Destroy(gameObject);

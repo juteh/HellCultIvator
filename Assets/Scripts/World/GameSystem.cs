@@ -30,7 +30,7 @@ public class GameSystem : MonoBehaviour {
         Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
         Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
         Cursor.visible = false;
-        PlayerRespawn();
+        // PlayerRespawn();
     }
 
     private void Update() {
@@ -89,6 +89,8 @@ public class GameSystem : MonoBehaviour {
     private void CheckWinCondition() {
         if (plantedTrees >= maxTrees) {
             Cursor.visible = true;
+            player.GetComponent<InputController>().cursorLocked = false;
+            player.GetComponent<InputController>().cursorInputForLook = false;
             SceneController.Instance.LoadSceneByName("WinScreen");
         }
     }
