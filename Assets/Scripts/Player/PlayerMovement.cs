@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] float jumpCooldown;
     [SerializeField] float airMultiplier;
     [SerializeField] MovementState state;
+    [SerializeField] Transform orientation;
 
     [Header("Crouching")]
     [SerializeField] float crouchSpeed;
@@ -19,7 +20,11 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] float playerHeight;
     [SerializeField] LayerMask groundLayer;
 
-    [SerializeField] Transform orientation;
+    [Header("Slope Handling")]
+    [SerializeField] float maxSlopeAngle;
+    private RaycastHit _slopeHit;
+
+
 
     [Header("Keybinds")]
     [SerializeField] KeyCode jumpKey = KeyCode.Space;
@@ -38,6 +43,9 @@ public class PlayerMovement : MonoBehaviour {
 
     private Rigidbody _playerRigidbody;
 
+    // to allow player to jump on slope
+    private bool _playerExitingSlope;
+
     public enum MovementState {
         walking,
         sprinting,
@@ -51,6 +59,7 @@ public class PlayerMovement : MonoBehaviour {
         _readyToJump = true;
         _startYScale = transform.localScale.y;
     }
+
 
     private void Update() {
 
@@ -100,24 +109,53 @@ public class PlayerMovement : MonoBehaviour {
     private void MovePlayer() {
         _moveDirection = orientation.forward * _verticalInput + orientation.right * _horizontalInput;
 
+        if (OnSlope() && !_playerExitingSlope) {
+            _playerRigidbody.AddForce(GetSlopeMoveDirection() * _moveSpeed * 20f, ForceMode.Force);
+
+            if (_playerRigidbody.velocity.y > 0) {
+                // pushing player on the slope for preventing "bumping"
+                _playerRigidbody.AddForce(Vector3.down * 80f, ForceMode.Force);
+            }
+        }
+
         if (_playerOnGround) {
             _playerRigidbody.AddForce(_moveDirection.normalized * _moveSpeed * 10f, ForceMode.Force);
         } else {
-            _playerRigidbody.AddForce(_moveDirection.normalized * _moveSpeed * 10f * airMultiplier, ForceMode.Force);
+
+            Vector3 forcePower = _moveDirection.normalized * _moveSpeed * 10f * airMultiplier;
+
+            // limiting the power of jumping with ClampMagnitude()
+            // add +10 just for better movement in the air
+            _playerRigidbody.AddForce(Vector3.ClampMagnitude(forcePower, _moveSpeed + 10), ForceMode.Force);
         }
+
+        // turn gravity off while on slope
+        _playerRigidbody.useGravity = !OnSlope();
 
     }
 
     private void SpeedControl() {
-        Vector3 flatVelocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
 
-        if (flatVelocity.magnitude > _moveSpeed) {
-            Vector3 limitedVelocity = flatVelocity.normalized * _moveSpeed;
-            _playerRigidbody.velocity = new Vector3(limitedVelocity.x, _playerRigidbody.velocity.y, limitedVelocity.z);
+        // limiting speed on slope
+        if (OnSlope() && !_playerExitingSlope) {
+            if (_playerRigidbody.velocity.magnitude > _moveSpeed) {
+                _playerRigidbody.velocity = _playerRigidbody.velocity.normalized * _moveSpeed;
+            }
+        } else {
+            Vector3 flatVelocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
+
+            if (flatVelocity.magnitude > _moveSpeed) {
+                Vector3 limitedVelocity = flatVelocity.normalized * _moveSpeed;
+                _playerRigidbody.velocity = new Vector3(limitedVelocity.x, _playerRigidbody.velocity.y, limitedVelocity.z);
+            }
+
         }
+
     }
 
     private void Jump() {
+        _playerExitingSlope = true;
+
         // reset y velocity for always jumping with the same height
         _playerRigidbody.velocity = new Vector3(_playerRigidbody.velocity.x, 0f, _playerRigidbody.velocity.z);
 
@@ -127,15 +165,14 @@ public class PlayerMovement : MonoBehaviour {
 
     private void ResetJump() {
         _readyToJump = true;
+        _playerExitingSlope = false;
     }
 
     private void MovementStateHandler() {
         if (Input.GetKey(crouchKey)) {
             state = MovementState.crouching;
             _moveSpeed = crouchSpeed;
-        }
-
-        if (_playerOnGround && Input.GetKey(sprintKey)) {
+        } else if (_playerOnGround && Input.GetKey(sprintKey)) {
             state = MovementState.sprinting;
             _moveSpeed = sprintSpeed;
         } else if (_playerOnGround) {
@@ -144,6 +181,18 @@ public class PlayerMovement : MonoBehaviour {
         } else {
             state = MovementState.air;
         }
+    }
 
+    private bool OnSlope() {
+        // store the hit with raycast in _slopehit with out
+        if (Physics.Raycast(transform.position, Vector3.down, out _slopeHit, playerHeight * 0.5f + 0.3f)) {
+            float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
+            return angle < maxSlopeAngle && angle != 0;
+        }
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection() {
+        return Vector3.ProjectOnPlane(_moveDirection, _slopeHit.normal).normalized;
     }
 }

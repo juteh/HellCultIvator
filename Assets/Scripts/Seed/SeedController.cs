@@ -10,7 +10,6 @@ public class SeedController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
         if (other.gameObject.tag == "Player") {
-            // Debug.Log(other.gameObject.tag);
             GameSystem.Instance.IncrementSeeds();
             StopAllCoroutines();
             Destroy(gameObject);

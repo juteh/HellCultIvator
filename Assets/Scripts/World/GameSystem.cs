@@ -1,4 +1,3 @@
-using Cinemachine;
 using UnityEngine;
 
 public class GameSystem : MonoBehaviour {
@@ -8,7 +7,8 @@ public class GameSystem : MonoBehaviour {
     [Space(10)]
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject playerPrefab;
-    [SerializeField] CinemachineVirtualCamera playerFollowCamera;
+    //[SerializeField] CinemachineVirtualCamera playerFollowCamera;
+    [SerializeField] GameObject cameraHolder;
     public static GameSystem Instance {
         get; private set;
     }
@@ -26,29 +26,27 @@ public class GameSystem : MonoBehaviour {
     }
 
     private void Start() {
+        IsPaused = false;
         Singletons.Instance.AudioManager.PlayMusic();
         Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
         Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
-        Cursor.visible = false;
         // PlayerRespawn();
     }
 
     private void Update() {
         // pause the game
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            // game is already paused
-            if (Time.timeScale == 0.0f) {
-                player.GetComponent<InputController>().cursorLocked = true;
-                player.GetComponent<InputController>().cursorInputForLook = true;
-                player.GetComponent<FirstPersonController>().RecoverRotation();
-                Cursor.visible = false;
-                Singletons.Instance.UIManager.ResumeToGame();
-            } else {
-                player.GetComponent<InputController>().cursorLocked = false;
-                player.GetComponent<InputController>().cursorInputForLook = false;
-                player.GetComponent<FirstPersonController>().FreezeRotation();
+            IsPaused = !IsPaused;
+            if (IsPaused) {
                 Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                Time.timeScale = 0.0f;
                 Singletons.Instance.UIManager.PauseGame();
+            } else {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                Time.timeScale = 1.0f;
+                Singletons.Instance.UIManager.ResumeToGame();
             }
         }
     }
@@ -77,13 +75,13 @@ public class GameSystem : MonoBehaviour {
 
     public void PlayerDie() {
         Singletons.Instance.AudioManager.PlayPlayerDie();
-        playerFollowCamera.Follow = null;
+        //playerFollowCamera.Follow = null;
         Destroy(player);
     }
 
     public void PlayerRespawn() {
         player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
-        playerFollowCamera.Follow = player.transform.transform.Find("CameraRoot");
+        //playerFollowCamera.Follow = player.transform.transform.Find("CameraRoot");
     }
 
     private void CheckWinCondition() {
@@ -93,5 +91,9 @@ public class GameSystem : MonoBehaviour {
             player.GetComponent<InputController>().cursorInputForLook = false;
             SceneController.Instance.LoadSceneByName("WinScreen");
         }
+    }
+
+    public bool IsPaused {
+        get; private set;
     }
 }
