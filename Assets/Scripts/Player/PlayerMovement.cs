@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour {
     [SerializeField] float jumpForce;
     [SerializeField] float jumpCooldown;
     [SerializeField] float airMultiplier;
-    [SerializeField] MovementState state;
+    [SerializeField] MovementState state = MovementState.idle;
     [SerializeField] Transform orientation;
 
     [Header("Crouching")]
@@ -23,8 +23,6 @@ public class PlayerMovement : MonoBehaviour {
     [Header("Slope Handling")]
     [SerializeField] float maxSlopeAngle;
     private RaycastHit _slopeHit;
-
-
 
     [Header("Keybinds")]
     [SerializeField] KeyCode jumpKey = KeyCode.Space;
@@ -46,11 +44,14 @@ public class PlayerMovement : MonoBehaviour {
     // to allow player to jump on slope
     private bool _playerExitingSlope;
 
+    private PlayerAttributes _playerAttributes;
+
     public enum MovementState {
+        idle,
         walking,
         sprinting,
         air,
-        crouching
+        crouching,
     }
 
     private void Start() {
@@ -58,6 +59,7 @@ public class PlayerMovement : MonoBehaviour {
         _playerRigidbody.freezeRotation = true;
         _readyToJump = true;
         _startYScale = transform.localScale.y;
+        _playerAttributes = GetComponent<PlayerAttributes>();
     }
 
 
@@ -69,6 +71,7 @@ public class PlayerMovement : MonoBehaviour {
         PlayerInput();
         SpeedControl();
         MovementStateHandler();
+        HandleStamina();
 
         if (_playerOnGround) {
             _playerRigidbody.drag = groundDrag;
@@ -148,9 +151,7 @@ public class PlayerMovement : MonoBehaviour {
                 Vector3 limitedVelocity = flatVelocity.normalized * _moveSpeed;
                 _playerRigidbody.velocity = new Vector3(limitedVelocity.x, _playerRigidbody.velocity.y, limitedVelocity.z);
             }
-
         }
-
     }
 
     private void Jump() {
@@ -169,17 +170,33 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     private void MovementStateHandler() {
-        if (Input.GetKey(crouchKey)) {
+        if (_playerRigidbody.velocity.Equals(Vector3.zero)) {
+            state = MovementState.idle;
+        } else if (Input.GetKey(crouchKey)) {
             state = MovementState.crouching;
             _moveSpeed = crouchSpeed;
         } else if (_playerOnGround && Input.GetKey(sprintKey)) {
             state = MovementState.sprinting;
-            _moveSpeed = sprintSpeed;
+            _moveSpeed = _playerAttributes.IsExhausted() ? walkSpeed : sprintSpeed;
         } else if (_playerOnGround) {
             state = MovementState.walking;
             _moveSpeed = walkSpeed;
         } else {
             state = MovementState.air;
+        }
+    }
+
+    private void HandleStamina() {
+        switch (state) {
+            case MovementState.crouching:
+            case MovementState.air:
+            case MovementState.walking:
+            case MovementState.idle:
+                _playerAttributes.StartRecoverStamina();
+                break;
+            case MovementState.sprinting:
+                _playerAttributes.StartReduceStamina();
+                break;
         }
     }
 

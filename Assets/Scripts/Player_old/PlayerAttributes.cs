@@ -6,10 +6,11 @@ public class PlayerAttributes : MonoBehaviour {
     [SerializeField] private float reduceIntervalTime = 0.1f;
     [SerializeField] private float recoverIntervalTime = 0.1f;
     [SerializeField] private float exhaustionTime = 3.0f;
-    public float currentStamina;
 
     private IEnumerator reduceStaminaRoutine;
     private IEnumerator recoverStaminaRoutine;
+    private float _currentStamina;
+    private bool _isExhausted;
     private IEnumerator playerExhaustedRoutine;
 
     private void OnCollisionEnter(Collision collision) {
@@ -20,12 +21,12 @@ public class PlayerAttributes : MonoBehaviour {
     }
 
     private void Awake() {
-        currentStamina = maxStamina;
+        _currentStamina = maxStamina;
     }
 
     private void Update() {
         // player is exhausted
-        if (currentStamina <= 0 && playerExhaustedRoutine == null) {
+        if (_currentStamina <= 0 && playerExhaustedRoutine == null) {
             if (reduceStaminaRoutine != null) {
                 StopCoroutine(reduceStaminaRoutine);
                 reduceStaminaRoutine = null;
@@ -49,7 +50,7 @@ public class PlayerAttributes : MonoBehaviour {
             StopCoroutine(recoverStaminaRoutine);
             recoverStaminaRoutine = null;
         }
-        if (reduceStaminaRoutine == null && currentStamina >= 0) {
+        if (reduceStaminaRoutine == null && _currentStamina >= 0) {
             reduceStaminaRoutine = ReduceStamina();
             StartCoroutine(reduceStaminaRoutine);
         }
@@ -63,7 +64,7 @@ public class PlayerAttributes : MonoBehaviour {
             StopCoroutine(reduceStaminaRoutine);
             reduceStaminaRoutine = null;
         }
-        if (recoverStaminaRoutine == null && currentStamina <= maxStamina) {
+        if (recoverStaminaRoutine == null && _currentStamina <= maxStamina) {
             recoverStaminaRoutine = RecoverStamina();
             StartCoroutine(recoverStaminaRoutine);
         }
@@ -71,9 +72,9 @@ public class PlayerAttributes : MonoBehaviour {
     }
 
     IEnumerator ReduceStamina() {
-        for (; currentStamina >= 0; currentStamina--) {
-            currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
-            float staminaRation = currentStamina / maxStamina;
+        for (; _currentStamina >= 0; _currentStamina--) {
+            _currentStamina = Mathf.Clamp(_currentStamina, 0, maxStamina);
+            float staminaRation = _currentStamina / maxStamina;
             Singletons.Instance.UIManager.UpdateStaminaBar(staminaRation);
             yield return new WaitForSeconds(reduceIntervalTime);
         }
@@ -81,9 +82,9 @@ public class PlayerAttributes : MonoBehaviour {
     }
 
     IEnumerator RecoverStamina() {
-        for (; currentStamina <= maxStamina; currentStamina++) {
-            currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
-            float staminaRation = currentStamina / maxStamina;
+        for (; _currentStamina <= maxStamina; _currentStamina++) {
+            _currentStamina = Mathf.Clamp(_currentStamina, 0, maxStamina);
+            float staminaRation = _currentStamina / maxStamina;
 
             Singletons.Instance.UIManager.UpdateStaminaBar(staminaRation);
             yield return new WaitForSeconds(recoverIntervalTime);
@@ -92,8 +93,14 @@ public class PlayerAttributes : MonoBehaviour {
     }
 
     IEnumerator PlayerExhausted() {
+        _isExhausted = true;
         yield return new WaitForSeconds(exhaustionTime);
         playerExhaustedRoutine = null;
-        currentStamina = maxStamina / 4;
+        _currentStamina = maxStamina / 4;
+        _isExhausted = false;
+    }
+
+    public bool IsExhausted() {
+        return _isExhausted;
     }
 }

@@ -28,4 +28,8 @@ public class PlayerCam : MonoBehaviour {
             orientation.rotation = Quaternion.Euler(0, _yRotation, 0);
         }
     }
+
+    public void SetOrientation(Transform orientation) {
+        this.orientation = orientation;
+    }
 }

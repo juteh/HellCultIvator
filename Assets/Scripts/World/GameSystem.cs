@@ -7,7 +7,7 @@ public class GameSystem : MonoBehaviour {
     [Space(10)]
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject playerPrefab;
-    //[SerializeField] CinemachineVirtualCamera playerFollowCamera;
+    // [SerializeField] CinemachineVirtualCamera playerFollowCamera;
     [SerializeField] GameObject cameraHolder;
     public static GameSystem Instance {
         get; private set;
@@ -30,7 +30,7 @@ public class GameSystem : MonoBehaviour {
         Singletons.Instance.AudioManager.PlayMusic();
         Singletons.Instance.UIManager.SetSeedPoints(collectedSeeds);
         Singletons.Instance.UIManager.SetTreePoints(plantedTrees);
-        // PlayerRespawn();
+        PlayerRespawn();
     }
 
     private void Update() {
@@ -81,6 +81,8 @@ public class GameSystem : MonoBehaviour {
 
     public void PlayerRespawn() {
         player = Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity);
+        cameraHolder.GetComponent<MoveCamera>().SetCameraPosition(player.transform.Find("CameraPosition"));
+        cameraHolder.transform.Find("PlayerCamera").GetComponent<PlayerCam>().SetOrientation(player.transform.Find("Orientation"));
         //playerFollowCamera.Follow = player.transform.transform.Find("CameraRoot");
     }
 

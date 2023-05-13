@@ -7,4 +7,8 @@ public class MoveCamera : MonoBehaviour {
         transform.position = cameraPosition.position;
         transform.rotation = cameraPosition.rotation;
     }
+
+    public void SetCameraPosition(Transform cameraPosition) {
+        this.cameraPosition = cameraPosition;
+    }
 }
